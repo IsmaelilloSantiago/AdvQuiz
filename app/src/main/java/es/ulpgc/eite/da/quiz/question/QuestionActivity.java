@@ -3,6 +3,7 @@ package es.ulpgc.eite.da.quiz.question;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ public class QuestionActivity
   public static String TAG = QuestionActivity.class.getSimpleName();
 
   private QuestionContract.Presenter presenter;
+  private Button boton_a,boton_b,boton_c;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,34 @@ public class QuestionActivity
 
     ((TextView) findViewById(R.id.nextButton)).setText(R.string.next_button);
     ((TextView) findViewById(R.id.cheatButton)).setText(R.string.cheat_button);
+    boton_a = (Button)findViewById(R.id.option1Button);
+    boton_b = (Button)findViewById(R.id.option2Button);
+    boton_c = (Button)findViewById(R.id.option3Button);
+
+    boton_a.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        presenter.onOptionButtonClicked(1);
+      }
+    });
+    boton_b.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        presenter.onOptionButtonClicked(2);
+      }
+    });
+    boton_c.setOnClickListener(new View.OnClickListener() {
+
+      @Override
+      public void onClick(View v) {
+        presenter.onOptionButtonClicked(3);
+      }
+    });
+
+
+
 
     /*
     if(savedInstanceState == null) {
@@ -76,6 +106,7 @@ public class QuestionActivity
     ((TextView) findViewById(R.id.option1Button)).setText(viewModel.option1);
     ((TextView) findViewById(R.id.option2Button)).setText(viewModel.option2);
     ((TextView) findViewById(R.id.option3Button)).setText(viewModel.option3);
+
 
     findViewById(R.id.option1Button).setEnabled(viewModel.optionEnabled);
     findViewById(R.id.option2Button).setEnabled(viewModel.optionEnabled);

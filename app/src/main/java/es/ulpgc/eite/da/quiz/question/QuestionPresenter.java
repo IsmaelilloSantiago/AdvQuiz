@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
+import es.ulpgc.eite.da.quiz.R;
 import es.ulpgc.eite.da.quiz.app.AppMediator;
 import es.ulpgc.eite.da.quiz.app.CheatToQuestionState;
 import es.ulpgc.eite.da.quiz.app.QuestionToCheatState;
@@ -33,13 +34,14 @@ public class QuestionPresenter implements QuestionContract.Presenter {
     state.option3 = model.getOption3();
 
     // reset state to tests
-    state.answerCheated=false;
+    state.answerCheated = false;
     state.optionClicked = false;
     state.option = 0;
 
     // update the view
     disableNextButton();
     view.get().resetReply();
+
   }
 
 
@@ -48,11 +50,21 @@ public class QuestionPresenter implements QuestionContract.Presenter {
     Log.e(TAG, "onRestart()");
 
     //TODO: falta implementacion
+    int cont = 0;
+    model.setQuizIndex(state.quizIndex);
+    if (state.optionClicked == false && cont == 0) {
+      view.get().resetReply();
+      cont++;
 
+    } else if (state.optionClicked == true && cont == 0){
+      onOptionButtonClicked(state.option);
+      cont ++;
   }
+}
 
 
-  @Override
+
+  //@Override
   public void onResume() {
     Log.e(TAG, "onResume()");
 
@@ -60,13 +72,16 @@ public class QuestionPresenter implements QuestionContract.Presenter {
 
     // use passed state if is necessary
     CheatToQuestionState savedState = getStateFromCheatScreen();
+
     if (savedState != null) {
 
       // fetch the model
     }
 
     // update the view
+
     view.get().displayQuestion(state);
+
   }
 
 
@@ -80,21 +95,53 @@ public class QuestionPresenter implements QuestionContract.Presenter {
     Log.e(TAG, "onOptionButtonClicked()");
 
     //TODO: falta implementacion
+  if ( option == 1){
+    state.option =1;
+  }else if (option == 2){
+    state.option =2;
+  }else{
+    state.option = 3;
+  }
 
+  state.optionClicked = true;
     boolean isCorrect = model.isCorrectOption(option);
     if(isCorrect) {
+      view.get().updateReply(isCorrect);
+      state.answer = model.getAnswer();
       state.cheatEnabled=false;
+
     } else {
+      view.get().updateReply(isCorrect);
+      state.answer = model.getAnswer();
       state.cheatEnabled=true;
     }
+    enableNextButton();
+
+    view.get().displayQuestion(state);
+
 
   }
 
   @Override
   public void onNextButtonClicked() {
     Log.e(TAG, "onNextButtonClicked()");
+    Log.e(TAG, model.getQuizIndex() + "");
 
     //TODO: falta implementacion
+    //model.updateQuizIndex();
+    state.quizIndex = state.quizIndex + 5;
+    model.setQuizIndex(state.quizIndex);
+    Log.e(TAG, model.getQuizIndex() + "");
+    state.question = model.getQuestion();
+    state.option1 = model.getOption1();
+    state.option2 = model.getOption2();
+    state.option3 = model.getOption3();
+    state.optionClicked = false;
+    view.get().resetReply();
+    disableNextButton();
+
+    view.get().displayQuestion(state);
+
   }
 
   @Override
@@ -126,9 +173,13 @@ public class QuestionPresenter implements QuestionContract.Presenter {
 
   private void enableNextButton() {
     state.optionEnabled=false;
+    state.nextEnabled = true;
+    //state.cheatEnabled = false;
 
     if(!model.hasQuizFinished()) {
       state.nextEnabled=true;
+    }else{
+      state.nextEnabled = false;
     }
   }
 
