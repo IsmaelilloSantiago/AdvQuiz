@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.lang.ref.WeakReference;
 
+import es.ulpgc.eite.da.quiz.R;
 import es.ulpgc.eite.da.quiz.app.AppMediator;
 import es.ulpgc.eite.da.quiz.app.CheatToQuestionState;
 import es.ulpgc.eite.da.quiz.app.QuestionToCheatState;
@@ -34,10 +35,12 @@ public class CheatPresenter implements CheatContract.Presenter {
     // reset state to tests
     state.answerEnabled=true;
     state.answerCheated=false;
-    state.answer = null;
+
+    state.answer = "???";
 
     // update the view
     view.get().resetAnswer();
+
   }
 
   @Override
@@ -53,15 +56,17 @@ public class CheatPresenter implements CheatContract.Presenter {
 
     //TODO: falta implementacion
 
-    // use passed state if is necessary
-    QuestionToCheatState savedState = getStateFromQuestionScreen();
-    if (savedState != null) {
-
-      // fetch the model
-
-      // update the state
-
-    }
+//    // use passed state if is necessary
+//    QuestionToCheatState savedState = getStateFromQuestionScreen();
+//
+//    if (savedState != null) {
+//
+//      // fetch the model
+//
+//      // update the state
+//
+//
+//    }
 
     // update the view
     view.get().displayAnswer(state);
@@ -77,29 +82,51 @@ public class CheatPresenter implements CheatContract.Presenter {
   public void onBackPressed() {
     Log.e(TAG, "onBackPressed()");
 
+
+
     //TODO: falta implementacion
+
+    if(state.answerCheated){
+      CheatToQuestionState estado = new CheatToQuestionState(state.answerCheated);
+      Log.e(TAG, estado.answerCheated + "");
+      passStateToQuestionScreen(estado);
+      view.get().onFinish();
+    }
 
   }
 
   @Override
   public void onWarningButtonClicked(int option) {
     Log.e(TAG, "onWarningButtonClicked()");
-
+    Log.e(TAG, option+"");
     //TODO: falta implementacion
     //option=1 => yes, option=0 => no
+    QuestionToCheatState savedState = getStateFromQuestionScreen();
+    if (option == 1){
+
+      state.answerCheated = true;
+      state.answer =savedState.answer;
+      state.answerEnabled = false;
+
+    }else{
+      view.get().onFinish();
+    }
+    view.get().displayAnswer(state);
 
   }
 
   private void passStateToQuestionScreen(CheatToQuestionState state) {
 
     //TODO: falta implementacion
+    mediator.setCheatToQuestionState(state);
   }
 
   private QuestionToCheatState getStateFromQuestionScreen() {
 
     //TODO: falta implementacion
 
-    return null;
+    return mediator.getQuestionToCheatState();
+
   }
 
   @Override

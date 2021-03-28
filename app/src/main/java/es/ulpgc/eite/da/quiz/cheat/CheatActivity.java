@@ -2,6 +2,7 @@ package es.ulpgc.eite.da.quiz.cheat;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +15,7 @@ public class CheatActivity
   public static String TAG = CheatActivity.class.getSimpleName();
 
   private CheatContract.Presenter presenter;
+  private Button boton_yes,boton_no;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class CheatActivity
 
     ((TextView) findViewById(R.id.warningTextView))
         .setText(R.string.warning_message);
+
+
 
     // do the setup
     CheatScreen.configure(this);
@@ -75,6 +79,8 @@ public class CheatActivity
     ((TextView) findViewById(R.id.answerTextView)).setText(viewModel.answer);
     findViewById(R.id.noButton).setEnabled(viewModel.answerEnabled);
     findViewById(R.id.yesButton).setEnabled(viewModel.answerEnabled);
+
+
   }
 
   @Override
